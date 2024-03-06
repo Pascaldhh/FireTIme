@@ -1,5 +1,5 @@
 import { Canvas } from "./utils/Canvas.js";
-import { calculateSize } from "./utils/Sizer.js";
+import { calculateGrowth } from "./utils/Sizer.js";
 
 export default class Rectangle {
   static rectangleCollection: Rectangle[] = [];
@@ -11,17 +11,20 @@ export default class Rectangle {
   public color: string;
 
   constructor(x: number, y: number, width: number, height: number, color: string = "black") {
-    this.x = x;
-    this.y = y;
+    this.x = calculateGrowth(x);
+    this.y = calculateGrowth(y);
     
-    this.width = calculateSize(width);
-    this.height = calculateSize(height);
+    this.width = calculateGrowth(width);
+    this.height = calculateGrowth(height);
     this.resize();
 
     this.color = color;
     Rectangle.rectangleCollection.push(this);
   }
 
+  /**
+   * Resizes the rectangle based on the width of canvas
+   */
   resize(): void {
     const size = Canvas.getSize();
     const multiplier = (size.width / Canvas.previousSize.width);
@@ -31,6 +34,10 @@ export default class Rectangle {
     this.height *= multiplier;
   }
 
+  /**
+   * Draws the rectangle on canvas
+   * @param ctx The canvas rendering context to draw on
+   */
   draw(ctx: CanvasRenderingContext2D): void {
     const oldStyle = ctx.fillStyle;
     ctx.fillStyle = this.color;

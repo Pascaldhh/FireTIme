@@ -1,4 +1,5 @@
 import Player from "./Player.js";
+import PlayerController from "./PlayerController.js";
 import Rectangle from "./Rectangle.js";
 import { Canvas, CanvasPlayer } from "./utils/Canvas.js";
 
@@ -10,7 +11,8 @@ export default class Game {
    * Gets called one time
    */
   start(): void {
-    this.player = new Player(Canvas.getSize().width /2, Canvas.getSize().height /2, 100, 100);
+    this.player = new Player(200, 200, 100, 100);
+    this.player.attach(new PlayerController());
 
     this.events();
     setInterval(this.update.bind(this), 1000/this.updatesEachSecond);
