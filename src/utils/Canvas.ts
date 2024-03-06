@@ -1,35 +1,57 @@
+import { Size } from "../types/Size.js";
+
 export enum CanvasId {
   Player,
   Map
 }
 
 export class Canvas {
+  public id: number;
+  public instance: HTMLCanvasElement;
+  public ctx: CanvasRenderingContext2D;
+
+  constructor(id: number, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+    this.id = id;
+    this.instance = canvas;
+    this.ctx = ctx;
+
+    this.resize();
+  }
+
+  public resize(): void {
+    const size = Canvas.getSize();
+    this.instance.width = size.width;
+    this.instance.height = size.height;
+    Canvas.previousSize = size;
+  }
+
   public static wrapperId = "canvas-wrapper";
-  private static canvasCollection: {id: CanvasId, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D}[] = [];
+  public static canvasCollection: Canvas[] = [];
+  public static previousSize: Size = this.getSize();
 
-  public static create(id: CanvasId) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+  public static create(id: CanvasId): Canvas {
+    const canvasInstance = document.createElement("canvas");
+    const ctx = canvasInstance.getContext("2d") as CanvasRenderingContext2D;
 
-    this.onResize(canvas);
-    addEventListener("resize", () => this.onResize(canvas));
+    const canvas = new Canvas(id, canvasInstance, ctx);
 
-    canvas.classList.add("absolute");
-    canvas.classList.add("inset-0");
+    canvasInstance.classList.add("absolute");
+    canvasInstance.classList.add("inset-0");
 
-    document.getElementById(this.wrapperId)?.appendChild(canvas);
-    this.canvasCollection.push({id, canvas, ctx})
-    return {id, canvas, ctx};
+    document.getElementById(this.wrapperId)?.appendChild(canvasInstance);
+    this.canvasCollection.push(canvas);
+    return canvas;
   }
 
-  public static get(id: CanvasId) {
-    return this.canvasCollection.find(canvas => canvas.id === id) ?? false;
+  public static get(id: CanvasId): Canvas | null {
+    return this.canvasCollection.find(canvas => canvas.id === id) ?? null;
   }
 
-  public static onResize(canvas: HTMLCanvasElement) {
-    const wrapper = document.getElementById(this.wrapperId) as HTMLDivElement;
-    canvas.width = wrapper.clientWidth;
-    canvas.height = wrapper.clientHeight;
+  public static getSize(): Size {
+    const wrap = document.getElementById(this.wrapperId);
+    return wrap 
+      ? {width: wrap.clientWidth, height: wrap.clientHeight}
+      : {width: 0, height: 0};
   }
 }
 
