@@ -1,13 +1,12 @@
-import PlayerController from "./PlayerController.js";
+import PlayerController, { PlayerMovementX, PlayerMovementY } from "./PlayerController.js";
 import Rectangle from "./Rectangle.js";
-
-enum PlayerMovementX { Idle, Left, Right };
-enum PlayerMovementY { Idle, Up, Down };
 
 export default class Player extends Rectangle {
   public controller: PlayerController | null;
 
-  public speed: number;
+  public speed = 10;
+  public speedAccel = 1;
+
   public velocityX: number;
   public velocityY: number;
 
@@ -16,6 +15,10 @@ export default class Player extends Rectangle {
 
   constructor(x: number, y: number, width: number, height: number) {
     super(x, y, width, height);
+    this.velocityX = 0;
+    this.velocityY = 0;
+    this.movementX = PlayerMovementX.Idle;
+    this.movementY = PlayerMovementY.Idle;
   }
 
   logic(): void {
@@ -26,6 +29,7 @@ export default class Player extends Rectangle {
   }
 
   attach(controller: PlayerController): void {
+    this.controller = controller;
     controller.bind(this);
   }
 }

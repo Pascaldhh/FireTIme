@@ -24,13 +24,15 @@ export default class Game {
    * Specified in the variable updatesEachSecond.
    */
   update(): void {
-
+    this.player.logic();
   }
 
   /**
    * Runs at the frequence of the screens refresh-rate.
    */
   draw(): void {
+    const size = Canvas.getSize();
+    CanvasPlayer.ctx.clearRect(0, 0, size.width, size.height);
     this.player.draw(CanvasPlayer.ctx);
     requestAnimationFrame(this.draw.bind(this));
   }
