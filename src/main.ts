@@ -4,14 +4,14 @@ import { Canvas, CanvasId, CanvasPlayer } from "./utils/Canvas.js";
 
 const {canvas, ctx} = CanvasPlayer;
 const wrapper = document.getElementById(Canvas.wrapperId) as HTMLDivElement;
-const rectangle = new Rectangle(0, 0, wrapper.clientWidth/12, wrapper.clientWidth/12);
+const rectangle = new Rectangle((canvas.width/2) - (wrapper.clientWidth/12 / 2), (canvas.height/2) - (wrapper.clientWidth/12 / 2), wrapper.clientWidth/12, wrapper.clientWidth/12);
 
 let canvasWidth = canvas.width;
 let canvasHeight = canvas.height;
 
 addEventListener("resize", () => {
-  rectangle.x = rectangle.x * (canvasWidth / canvas.width);
-  rectangle.y = rectangle.y * (canvasHeight / canvas.height);
+  rectangle.x = rectangle.x * (canvas.width / canvasWidth);
+  rectangle.y = rectangle.y * (canvas.height / canvasHeight);
   canvasWidth = canvas.width;
   canvasHeight = canvas.height;
 });
